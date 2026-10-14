@@ -2,6 +2,8 @@ from functools import wraps
 
 
 def log(filename=None):
+    """Декоратор для логирования вызовов функции и ее результатов."""
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -9,24 +11,19 @@ def log(filename=None):
                 result = func(*args, **kwargs)
                 log_message = f"{func.__name__} ok"
                 if filename:
-                    # Если имя файла передано, открываем его в режиме дозаписи ("a" - append)
                     with open(filename, "a", encoding="utf-8") as file:
-                        file.write(log_message + "\n")  # \n нужен для переноса на новую строку
+                        file.write(log_message + "\n")
                 else:
-                    # Если файла нет (filename остался None), просто выводим в терминал
                     print(log_message)
-
+                return result
             except Exception as e:
-                log_message = f"{func.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}"
+                log_message = f"{func.__name__} error: {type(e).__name__}. " f"Inputs: {args}, {kwargs}"
                 if filename:
-                    # Если имя файла передано, открываем его в режиме дозаписи ("a" - append)
                     with open(filename, "a", encoding="utf-8") as file:
-                        file.write(log_message + "\n")  # \n нужен для переноса на новую строку
+                        file.write(log_message + "\n")
                 else:
-                    # Если файла нет (filename остался None), просто выводим в терминал
                     print(log_message)
                 raise
-                return result
 
         return wrapper
 
